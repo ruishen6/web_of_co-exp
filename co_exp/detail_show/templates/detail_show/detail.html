@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>co-exp</title>
+    <link href="{% static 'css/detail.css' %}" rel="stylesheet">
+</head>
+
+
+
+<body>
+
+<h1>gene page</h1>
+
+<div class="d1">
+    <form action="{% url 'detail_show:search' %}" method="POST" name="search">
+        {% csrf_token %}
+        <input type="text" name="gene_ids"/>
+        <p>eg:TEA000001.1</p>
+        <input type="submit" value="search" name='submitBtn'/>
+    </form>
+</div>
+<br/>
+
+<table class="ta">
+    <tbody>
+    <tr class="ta1">
+        <!-- <td>Gene Accession</td> -->
+        <!-- <td>Description</td> -->
+        <!-- <td>Alias</td> -->
+        <!-- <td>Location</td> -->
+        <!-- <td>Gene Ontology:</td> -->
+        <!-- <td>KEGG:</td> -->
+        <th>geneaccession</th>
+        <th>coexpress_gene</th>
+        <th>cor</th>
+        <th>p-value</th>
+    </tr>
+{% for item in gene_list.all %}
+    <tr>
+        <td>{{ item.geneaccession }}</td>
+        <td>{{ item.coexpress_gene }}</td>
+        <td>{{ item.cor }}</td>
+        <td>{{ item.p_value }}</td>
+        <!-- <td>{{ descs.geneaccession }}</td>
+        <td>{{ descs.description }}</td>
+        <td>{{ descs.alias }}</td>
+        <td>{{ descs.location }}</td> -->
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+</body>
+</html>
