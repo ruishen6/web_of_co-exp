@@ -7,7 +7,18 @@
 <head>
     <meta charset="UTF-8">
     <title>co-exp</title>
-    <link href="{% static 'css/detail.css' %}" rel="stylesheet">
+    <link href="{% static 'css/co-expression.css' %}" rel="stylesheet">
+    <link href="{% static 'css/vis.min.css' %}" rel="stylesheet">
+
+    <script src="{% static 'js/network.js' %}"></script>
+    <script src="{% static 'js/vis.min.js' %}"></script>
+    <style type="text/css">
+        #network {
+            width: 600px;
+            height: 400px;
+            border: 1px solid lightgray;
+        }
+    </style>
 </head>
 
 
@@ -16,15 +27,20 @@
 
 <h1>gene page</h1>
 
-<div class="d1">
-    <form action="{% url 'detail_show:search' %}" method="POST" name="search">
-        {% csrf_token %}
-        <input type="text" name="gene_ids"/>
-        <p>eg:TEA000001.1</p>
-        <input type="submit" value="search" name='submitBtn'/>
-    </form>
+
+
+<div id="network" data-url="${url}">
+
 </div>
 <br/>
+<!-- <script type="text/javascript">
+
+
+</script> -->
+
+
+
+
 
 <table class="ta">
     <tbody>

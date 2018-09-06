@@ -1,6 +1,6 @@
 .ta{
-    border: 1;
-    width: 100%;
+    border: 1px;
+    width: 50%;
     border-collapse: collapse;
     background: yellow;
 }
@@ -8,9 +8,4 @@
     background: rgb(46, 15, 133);
     /* color: white; */
     text-align: left;
-}
-.d1{
-    width: 100px;
-    height: 50px;
-    background: grey;
 }

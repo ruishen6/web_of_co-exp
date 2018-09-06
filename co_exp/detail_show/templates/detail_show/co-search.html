@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/co-search.css' %}" />
+    <!-- <script src="main.js"></script> -->
+</head>
+
+<body>
+    <div class="d1">
+    <form action="{% url 'detail_show:co-expression' %}" method="post" name="co-search2co-expression">
+        {% csrf_token %}
+        <input type="text" name="gene_ids"/>
+        <p>eg:TEA000001.1,TEA000002.1</p>
+        <!-- <a href="http://127.0.0.1:8000/detail_show/co-expression/"> -->
+            <!-- <input type="button" value="search" name='submitBtn' onclick="window.location.href('http://127.0.0.1:8000/detail_show/co-expression/')"/> -->
+        <!-- </a> -->
+        <input type="submit" value="search" name='submitBtn'/>
+    </form>
+    </div>
+</body>
+</html>

@@ -5,18 +5,16 @@ from django.http import HttpResponse, HttpResponseRedirect
 # from .models import descs
 from .models import genelist
 
-def detail(request):
-    gene_list = genelist.objects.order_by('-geneaccession')[:10]
-    context = {'gene_list':gene_list,}
-    return render(request, 'detail_show/detail.html', context)
+def index(request):
+    return render(request,'detail_show/home.html')
 
-def search(request):
-    if request.method == 'POST':
-        gene_accession = request.POST['gene_ids']
-    gene_list = genelist.objects.filter(geneaccession=gene_accession)
 
-    return HttpResponseRedirect(reversed('detail_show:detail'))
+def co_search(request):
+    return render(request, 'detail_show/co-search.html')
+
     
-
-# def index(request):
-    # return HttpResponse('hello')
+def co_expression(request):
+    gene_accession = request.POST['gene_ids']
+    gene_list = genelist.objects.filter(geneaccession=gene_accession)
+    context = {'gene_list':gene_list}
+    return render(request, 'detail_show/co-expression.html', context)

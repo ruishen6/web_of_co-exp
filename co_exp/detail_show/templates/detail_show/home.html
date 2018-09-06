@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+
+<body>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-7">
+                <h4>Introduction</h4>
+                <p class="text-justify" style="font-size: 16px">
+                    Rice Expression Database (RED) is a repository of gene expression profiles derived entirely from
+                    RNA-Seq data analysis on tissues spanning an entire range of rice growth stages and covering a
+                    wide variety of biotic and abiotic treatments.
+                </p>
+                <p class="text-justify" style="font-size:16px">
+                    RED features integration and visualization of gene expression profiles based on curated and
+                    quality-controlled RNA-Seq data encompassing diverse tissues and treatments.
+                </p>
+                <p class='text-justify' style="font-size:16px">
+                    RED is a sub-project of <a href="http://ic4r.org">IC4R (Information Commons for Rice;
+                    http://ic4r.org)</a> that aims to provide rice reference genome with standardized and accurate
+                    gene annotations based on a huge volume of omics data and a large number of rice-related
+                    literatures.
+                </p>
+                <hr>
+                <h4>Data Statistics</h4>
+                <ul class="list-inline">
+                    <li>
+                        <h4>9
+                            <small> Tissues</small>
+                        </h4>
+                    </li>
+                    <li>
+                        <h4>24
+                            <small> Projects</small>
+                        </h4>
+                    </li>
+                    <li>
+                        <h4>284
+                            <small> Experiments</small>
+                        </h4>
+                    </li>
+                </ul>
+                <hr>
+            </div>
+            <div class="col-md-5">
+                <!--                            <h4 class="callout callout-info">Visualization</h4>-->
+                <div class="imgbox">
+                    <ul>
+                        <li style="display: block" title="Expression Profiles - Heatmap chart"><img
+                                src="${basePath}/static/img/heatmap.png"/></li>
+                        <li title="Expression Profiles - Line chart"><img src="${basePath}/static/img/line.png"/></li>
+                        <li title="Expression Profiles - Box plot chart"><img src="${basePath}/static/img/boxplot.png"/>
+                        </li>
+                    </ul>
+                    <div class="title_bg common"></div>
+                    <div class="title common"></div>
+                    <div class="pager common">
+                        <ul>
+                            <li>3</li>
+                            <li>2</li>
+                            <li style="background:#226687;">1</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h4>Please cite:</h4>
+                <ul>
+                    <li>Xia L<sup>#</sup>, Zou D<sup>#</sup>, Sang J, Xu XJ, Yin HY, Li MW, Wu SY, Hu SN, Hao LL*, Zhang
+                        Z*: <strong>Rice Expression Database (RED): an integrated RNA-Seq-derived gene expression
+                            database for rice</strong>. <em>Journal of Genetics and Genomics</em>, 2017, 44(5):235-241.
+                        [PMID=28529082]
+                    </li>
+                </ul>
+                <h4>Release Notes</h4>
+                <ul>
+                    <li>9 tissues/284 experiments have been integrated into RED. [August 2016]</li>
+                    <li>Co-expression network analysis has been integrated into RED. [April 2016]</li>
+                    <li>Classification of Tissue-specific & House-keeping Genes have been integrated into RED. [March
+                        2016]
+                    </li>
+                    <li>RED is regarded as one of the important database resources of <a
+                            href="http://bigd.big.ac.cn/gen" target="_blank">Gene Expression Nebulas</a> in BIG Data
+                        Center. [January 2016]
+                    </li>
+                    <li>RED is updated with bug fixed and new features added.[May 2015]</li>
+                    <li>RED is publicly accessible.[April 2015]</li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h4>Global Visitors</h4>
+                <div style="display:inline-block;width:280px;">
+                    <script async="async"
+                            src="//rj.revolvermaps.com/0/0/7.js?i=99fi64tjtdt&amp;amp;m=0&amp;amp;c=ff0000&amp;amp;cr1=ffffff&amp;amp;sx=0"
+                            type="text/javascript"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
