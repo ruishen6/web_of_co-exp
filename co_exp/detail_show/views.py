@@ -12,6 +12,9 @@ def index(request):
 def co_search(request):
     return render(request, 'detail_show/co-search.html')
 
+def network_json(request):
+    return render(request, 'detail_show/network.html')
+
     
 def co_expression(request):
     gene_accession = request.POST['gene_ids']
