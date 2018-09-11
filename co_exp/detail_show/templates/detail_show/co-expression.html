@@ -7,18 +7,24 @@
 <head>
     <meta charset="UTF-8">
     <title>co-exp</title>
-    <link href="{% static 'css/co-expression.css' %}" rel="stylesheet">
     <link href="{% static 'css/vis.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dataTables.tableTools.min.css' %}">
+    <link href="{% static 'css/dataTables.bootstrap.min.css' %}">
 
     <script src="{% static 'js/network.js' %}"></script>
     <script src="{% static 'js/vis.min.js' %}"></script>
     <style type="text/css">
-        #network {
+        .co-network {
             width: 600px;
             height: 400px;
             border: 1px solid lightgray;
         }
     </style>
+    <script src="{% static 'js/dataTables.tableTools.min.js' %}"></script>
+    <script src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'js/jquery.tablesort.min.js' %}"></script>
+
 </head>
 
 
@@ -27,48 +33,34 @@
 
 <h1>gene page</h1>
 
-<div id="network" data-url="${url}">
+<div id="network" class="co-network">
 
 </div>
 <br/>
-<!-- <script type="text/javascript">
 
 
-</script> -->
-
-
-
-
-
-<table class="ta">
+<div id="dt_wrapper">
+<table class="table table-bordered table-striped no-footer" id="dt" role="grid" aria-describedby="dt_info">
+    <thead>
+        <tr>
+            <th>geneaccession</th>
+            <th>coexpress_gene</th>
+            <th>cor</th>
+            <th>p-value</th>
+        </tr>
+    </thead>
     <tbody>
-    <tr class="ta1">
-        <!-- <td>Gene Accession</td> -->
-        <!-- <td>Description</td> -->
-        <!-- <td>Alias</td> -->
-        <!-- <td>Location</td> -->
-        <!-- <td>Gene Ontology:</td> -->
-        <!-- <td>KEGG:</td> -->
-        <th>geneaccession</th>
-        <th>coexpress_gene</th>
-        <th>cor</th>
-        <th>p-value</th>
-    </tr>
-{% for item in gene_list.all %}
-    <tr>
-        <td>{{ item.geneaccession }}</td>
-        <td>{{ item.coexpress_gene }}</td>
-        <td>{{ item.cor }}</td>
-        <td>{{ item.p_value }}</td>
-        <!-- <td>{{ descs.geneaccession }}</td>
-        <td>{{ descs.description }}</td>
-        <td>{{ descs.alias }}</td>
-        <td>{{ descs.location }}</td> -->
-    </tr>
-{% endfor %}
-</tbody>
+    {% for item in gene_list.all %}
+        <tr>
+            <td>{{ item.geneaccession }}</td>
+            <td>{{ item.coexpress_gene }}</td>
+            <td>{{ item.cor }}</td>
+            <td>{{ item.p_value }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>
-
+</div>
 
 </body>
 </html>

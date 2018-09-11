@@ -17,7 +17,9 @@ def network_json(request):
 
     
 def co_expression(request):
-    gene_accession = request.POST['gene_ids']
-    gene_list = genelist.objects.filter(geneaccession=gene_accession)
+    accession = request.POST['co-gene_ids']
+    gene_accessions = accession.split(',')
+    co_cor = request.POST['cor']
+    gene_list = genelist.objects.filter(geneaccession__in=gene_accessions, cor__gte=co_cor)
     context = {'gene_list':gene_list}
     return render(request, 'detail_show/co-expression.html', context)

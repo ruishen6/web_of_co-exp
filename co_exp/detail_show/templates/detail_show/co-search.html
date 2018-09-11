@@ -9,24 +9,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/co-search.css' %}"/>
 
-    <!-- <script src="{% static 'js/jquery-1.11.2.min.js' %}" type="text/javascript"></script>
-    <script type="text/javascript">
-        function to(){  
-            var getval ="valueTest";
-            window.location.href="/detail_show/network?values="+getval;  
-        } 
-    </script> -->
+    <script src="{% static 'js/jquery-1.11.2.min.js' %}"></script>
+    <script src="{% static 'js/co-search.js' %}"></script>
 
+    <script>
+        function to(){
+            var co_gene=document.getElementById("co-gene").value;
+            var cor=document.getElementById("co").value;
+            var url="/detail_show/co-expression?gene="+co_gene;
+            $("#sub").click(function(){window.location.href=url;});
+        }
+    </script>
 </head>
 
 <body>
     <div class="d1">
-    <form action="{% url 'detail_show:co-expression' %}" method="post" name="co-search2co-expression">
-        {% csrf_token %}
-        <input type="text" name="gene_ids"/>
-        <p>eg:TEA000001.1,TEA000002.1</p>
-        <input type="submit" value="search" name='submitBtn' onclick="to()"/>
-    </form>
+        <form action="{% url 'detail_show:co-expression' %}" method="post" id="co-form" onsubmit="return to()">
+            {% csrf_token %}
+            <div>
+                <label>Gene ID:</label><br/>
+                <textarea name="co-gene_ids" id='co-gene' rows="10" cols="50" required></textarea>  <!-- required 属性规定必需在提交之前填写输入字段。 -->
+                <br/>
+                <span>
+                    e.g.,&nbsp;<a href="#"><em id="eg_co-gene">TEA000001.1,TEA000002.1</em></a>
+                </span>
+            </div>
+            <div>
+                <input type="text" value="0.9" name="cor" id="co"/>
+            </div>
+            <div>
+                <input type="submit" value="search" name='submitBtn' id="sub"/>
+            </div>
+        </form>
     </div>
 </body>
 </html>
