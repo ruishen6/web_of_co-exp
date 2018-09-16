@@ -23,7 +23,7 @@
 
 <body>
     <div class="d1">
-        <form action="{% url 'detail_show:co-expression' %}" method="get">
+        <form action="{% url 'detail_show:co-expression' %}" method="POST">
             {% csrf_token %}
             <div>
                 <label>Gene ID:</label><br/>

@@ -41,7 +41,7 @@
     $("#network").html("<img src='/static/img/loading.gif'/>");
     // var parameter = $("#network").data("url");
     // var parameter = $("#network").attr("data-url");
-    var parameter = "{{ request.GET.urlencode }}";
+    var parameter = 'genes='+'{{ accession }}' + '&cor='+'{{ co_cor }}';
     var s_url = "{% url 'detail_show:network' %}";
     var url = s_url+'?'+parameter
     $.ajax({
