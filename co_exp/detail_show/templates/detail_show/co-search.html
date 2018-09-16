@@ -10,32 +10,31 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/co-search.css' %}"/>
 
     <script src="{% static 'js/jquery-1.11.2.min.js' %}"></script>
-    <script src="{% static 'js/co-search.js' %}"></script>
 
     <script>
-        function to(){
-            var co_gene=document.getElementById("co-gene").value;
-            var cor=document.getElementById("co").value;
-            var url="/detail_show/co-expression?gene="+co_gene;
-            $("#sub").click(function(){window.location.href=url;});
-        }
+        $(document).ready(function(){
+            $('#eg_co-gene').click(function(){
+                var eg=$('#eg_co-gene').text();
+                $('#co-gene').val(eg);
+            });
+        });
     </script>
 </head>
 
 <body>
     <div class="d1">
-        <form action="{% url 'detail_show:co-expression' %}" method="post" id="co-form" onsubmit="return to()">
+        <form action="{% url 'detail_show:co-expression' %}" method="get">
             {% csrf_token %}
             <div>
                 <label>Gene ID:</label><br/>
-                <textarea name="co-gene_ids" id='co-gene' rows="10" cols="50" required></textarea>  <!-- required 属性规定必需在提交之前填写输入字段。 -->
+                <textarea id='co-gene' rows="10" cols="50" name="co-gene_ids" required></textarea>  <!-- required 属性规定必需在提交之前填写输入字段。 -->
                 <br/>
                 <span>
                     e.g.,&nbsp;<a href="#"><em id="eg_co-gene">TEA000001.1,TEA000002.1</em></a>
                 </span>
             </div>
             <div>
-                <input type="text" value="0.9" name="cor" id="co"/>
+                <input type="text" value="0.9" id="co-cor" name="cor"/>
             </div>
             <div>
                 <input type="submit" value="search" name='submitBtn' id="sub"/>

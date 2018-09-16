@@ -8,11 +8,10 @@
     <meta charset="UTF-8">
     <title>co-exp</title>
     <link href="{% static 'css/vis.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/dataTables.tableTools.min.css' %}">
-    <link href="{% static 'css/dataTables.bootstrap.min.css' %}">
+    <!-- <link href="{% static 'css/dataTables.tableTools.min.css' %}">
+    <link href="{% static 'css/dataTables.bootstrap.min.css' %}"> -->
 
-    <script src="{% static 'js/network.js' %}"></script>
-    <script src="{% static 'js/vis.min.js' %}"></script>
+    <script src="{% static 'js/jquery-1.11.2.min.js' %}"></script>
     <style type="text/css">
         .co-network {
             width: 600px;
@@ -20,10 +19,13 @@
             border: 1px solid lightgray;
         }
     </style>
-    <script src="{% static 'js/dataTables.tableTools.min.js' %}"></script>
+    <!-- <script src="{% static 'js/network.js' %}"></script> -->
+    <script src="{% static 'js/vis.min.js' %}"></script>
+
+    <!-- <script src="{% static 'js/dataTables.tableTools.min.js' %}"></script>
     <script src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
     <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static 'js/jquery.tablesort.min.js' %}"></script>
+    <script src="{% static 'js/jquery.tablesort.min.js' %}"></script> -->
 
 </head>
 
@@ -33,9 +35,62 @@
 
 <h1>gene page</h1>
 
-<div id="network" class="co-network">
+<div id="network" class="co-network"></div>
+<script>
+// $(document).ready(function () {
+    $("#network").html("<img src='/static/img/loading.gif'/>");
+    // var parameter = $("#network").data("url");
+    // var parameter = $("#network").attr("data-url");
+    var parameter = "{{ request.GET.urlencode }}";
+    var s_url = "{% url 'detail_show:network' %}";
+    var url = s_url+'?'+parameter
+    $.ajax({
+        url: url,
+        type: "get",
+        dataType: "json",
+        success: function (data) {
+            alert("Data Loaded: " + data);
+            var nodesDataset = new vis.DataSet(data.nodes);
+            var edgesDataset = new vis.DataSet(data.edges);
 
-</div>
+            var container = document.getElementById('network');
+            var options = {
+                autoResize: true,
+                nodes: {
+                    shape: 'dot',
+                    size:5,
+                    borderWidth:0,
+                    borderWidthSelected:0,
+                    font: '12px arial #333'
+                },
+                groups: {
+                    geneGroup: {color:{background:'red'}, borderWidth:0,size:10}
+                },
+                physics:false,
+                edges: {
+                    width: 0.2,
+                    color: '#999',
+                    smooth: {
+                        type: 'continuous'
+                    }
+                },
+                interaction: {
+                    hover: true,
+                    hideEdgesOnDrag: true,
+                    tooltipDelay: 50
+                }
+            };
+            var data1 = {nodes: nodesDataset, edges: edgesDataset};
+
+
+            var network = new vis.Network(container, data1, options);
+
+            //network.on("click",neighbourhoodHighlight);
+        }
+
+    });
+// });
+</script>
 <br/>
 
 
