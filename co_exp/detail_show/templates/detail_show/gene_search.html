@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>co-search</title>
+    <title>search</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/co-search.css' %}"/>
 
@@ -13,9 +13,9 @@
 
     <script>
         $(document).ready(function(){
-            $('#eg_co-gene').click(function(){
-                var eg=$('#eg_co-gene').text();
-                $('#co-gene').val(eg);
+            $('#eg_gene').click(function(){
+                var eg=$('#eg_gene').text();
+                $('#gene').val(eg);
             });
         });
     </script>
@@ -23,18 +23,15 @@
 
 <body>
     <div class="d1">
-        <form action="{% url 'detail_show:co-expression' %}" method="POST">
+        <form action="{% url 'detail_show:gene' %}" method="POST">
             {% csrf_token %}
             <div>
                 <label>Gene ID:</label><br/>
-                <textarea id='co-gene' rows="10" cols="50" name="co-gene_ids" required></textarea>  <!-- required 属性规定必需在提交之前填写输入字段。 -->
+                <textarea id='gene' rows="10" cols="50" name="gene_ids" required></textarea>  <!-- required 属性规定必需在提交之前填写输入字段。 -->
                 <br/>
                 <span>
-                    e.g.,&nbsp;<a href="#"><em id="eg_co-gene">TEA000001.1,TEA000003.1</em></a>
+                    e.g.,&nbsp;<a href="#"><em id="eg_gene">TEA000001.1</em></a>
                 </span>
-            </div>
-            <div>
-                <input type="text" value="0.9" id="co-cor" name="cor"/>
             </div>
             <div>
                 <input type="submit" value="search" name='submitBtn' id="sub"/>

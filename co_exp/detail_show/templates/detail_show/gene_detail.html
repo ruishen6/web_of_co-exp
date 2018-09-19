@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>gene_detail</title>
+    <link href="{% static 'css/co-expression.css' %}" rel="stylesheet" type="text/css">
+</head>
+
+
+
+<body>
+
+<div class="body">
+    <div class="h">
+        <h2>gene_detail</h2>
+    </div>
+
+
+    <div class="table">
+        <p>Gene Accession: {{ accession }}</p>
+        {% for item in desc.all %}
+            <p>Description: {{ item.description }}</p>
+            <p>Alias：{{ item.alias }}</p>
+            <p>Location：{{ item.location }}</p>
+        {% endfor %}
+        <p>Gene Ontology:</p>
+        {% for item in go_numbers %}
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://amigo.geneontology.org/amigo/term/{{ item }}" target="view_window">{{ item }}</a></p>
+        {% endfor %}
+        <p>KEGG:</p>
+        {% for item in kegg_numbers %}
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kegg.jp/dbget-bin/www_bget?ko:{{ item }}" target="view_window">{{ item }}</a></p>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

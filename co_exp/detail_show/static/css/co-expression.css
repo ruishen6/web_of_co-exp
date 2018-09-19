@@ -1,0 +1,25 @@
+.body{
+    margin: 0 auto 20px;
+    width: 900px;
+    border: 1px solid lightgray;
+}
+.h{
+    margin: 0 auto;
+    width: 800px;
+}
+.co-network {
+    margin: 0 auto;
+    width: 800px;
+    height: 500px;
+    border: 1px solid lightgray;
+}
+.total{
+    margin: 0 auto 40px;
+    width: 800px;
+}
+.table{
+    margin: 0 auto;
+    width: 800px;
+    height: 500px;
+    /* border: 1px solid lightgray; */
+}

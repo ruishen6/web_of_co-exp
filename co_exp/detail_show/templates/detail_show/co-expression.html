@@ -7,25 +7,20 @@
 <head>
     <meta charset="UTF-8">
     <title>co-exp</title>
+    <link href="{% static 'css/co-expression.css' %}" rel="stylesheet" type="text/css">
+
     <link href="{% static 'css/vis.min.css' %}" rel="stylesheet">
-    <!-- <link href="{% static 'css/dataTables.tableTools.min.css' %}">
-    <link href="{% static 'css/dataTables.bootstrap.min.css' %}"> -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.dataTables.css' %}">	
 
-    <script src="{% static 'js/jquery-1.11.2.min.js' %}"></script>
-    <style type="text/css">
-        .co-network {
-            width: 600px;
-            height: 400px;
-            border: 1px solid lightgray;
-        }
-    </style>
-    <!-- <script src="{% static 'js/network.js' %}"></script> -->
+    <script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'js/vis.min.js' %}"></script>
-
-    <!-- <script src="{% static 'js/dataTables.tableTools.min.js' %}"></script>
-    <script src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static 'js/jquery.tablesort.min.js' %}"></script> -->
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.js' %}"></script>
+    
+    <script>
+        $(document).ready( function () {
+            $('#datatable').DataTable();
+        } );
+    </script>
 
 </head>
 
@@ -33,88 +28,90 @@
 
 <body>
 
-<h1>gene page</h1>
+<div class="body">
+    <div class="h">
+        <h2>Co Expression</h2>
+    </div>
 
-<div id="network" class="co-network"></div>
-<script>
-// $(document).ready(function () {
-    $("#network").html("<img src='/static/img/loading.gif'/>");
-    // var parameter = $("#network").data("url");
-    // var parameter = $("#network").attr("data-url");
-    var parameter = 'genes='+'{{ accession }}' + '&cor='+'{{ co_cor }}';
-    var s_url = "{% url 'detail_show:network' %}";
-    var url = s_url+'?'+parameter;
-
-    $.ajax({
-        url: url,
-        type: "get",
-        dataType: "json",
-        success: function (data) {
-            data = JSON.parse(data);
-            var nodesDataset = new vis.DataSet(data.nodes);
-            var edgesDataset = new vis.DataSet(data.edges);
-
-            var container = document.getElementById('network');
-            var options = {
-                autoResize: true,
-                nodes: {
-                    shape: 'dot',
-                    size:5,
-                    borderWidth:0,
-                    borderWidthSelected:0,
-                    font: '12px arial #333'
-                },
-                groups: {
-                    geneGroup: {color:{background:'red'}, borderWidth:0,size:10}
-                },
-                physics:false,
-                edges: {
-                    width: 0.2,
-                    color: '#999',
-                    smooth: {
-                        type: 'continuous'
+    <div id="network" class="co-network"></div>
+    <script>
+        $("#network").html("<img src='{% static 'images/loading.gif' %}'/>");
+        var parameter = 'genes='+'{{ accession }}' + '&cor='+'{{ co_cor }}';
+        var s_url = "{% url 'detail_show:network' %}";
+        var url = s_url+'?'+parameter;
+    
+        $.ajax({
+            url: url,
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                data = JSON.parse(data);
+                var nodesDataset = new vis.DataSet(data.nodes);
+                var edgesDataset = new vis.DataSet(data.edges);
+    
+                var container = document.getElementById('network');
+                var options = {
+                    autoResize: true,
+                    nodes: {
+                        shape: 'dot',
+                        size:5,
+                        borderWidth:0,
+                        borderWidthSelected:0,
+                        font: '12px arial #333'
+                    },
+                    groups: {
+                        geneGroup: {color:{background:'red'}, borderWidth:0,size:10}
+                    },
+                    physics:false,
+                    edges: {
+                        width: 0.2,
+                        color: '#999',
+                        smooth: {
+                            type: 'continuous'
+                        }
+                    },
+                    interaction: {
+                        hover: true,
+                        hideEdgesOnDrag: true,
+                        tooltipDelay: 50
                     }
-                },
-                interaction: {
-                    hover: true,
-                    hideEdgesOnDrag: true,
-                    tooltipDelay: 50
-                }
-            };
-            var data1 = {nodes: nodesDataset, edges: edgesDataset};
+                };
+                var data1 = {nodes: nodesDataset, edges: edgesDataset};
+    
+    
+                var network = new vis.Network(container, data1, options);
+    
+                //network.on("click",neighbourhoodHighlight);
+            }
+        });
+    </script>
+    <div class="total">
+        <p>Total: {{ node_number }} nodes; {{ edge_number }} edges</p>
+    </div>
 
 
-            var network = new vis.Network(container, data1, options);
-
-            //network.on("click",neighbourhoodHighlight);
-        }
-    });
-
-</script>
-<br/>
-
-
-<div id="dt_wrapper">
-<table class="table table-bordered table-striped no-footer" id="dt" role="grid" aria-describedby="dt_info">
-    <thead>
-        <tr>
-            <th>geneaccession</th>
-            <th>coexpress_gene</th>
-            <th>cor</th>
-            <th>p-value</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for item in gene_list.all %}
-        <tr>
-            <td>{{ item.geneaccession }}</td>
-            <td>{{ item.coexpress_gene }}</td>
-            <td>{{ item.cor }}</td>
-            <td>{{ item.p_value }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+    <div class="table">
+        <table id="datatable">
+            <thead>
+                <tr>
+                    <th>Gene One</th>
+                    <th>Gene Two</th>
+                    <th>Pearson's R</th>
+                    <th>P-value</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in gene_list %}
+                <tr>
+                    <td><a href="{% url 'detail_show:gene' %}?gene={{ item.geneaccession }}" target="view_window">{{ item.geneaccession }}</a></td>
+                    <td><a href="{% url 'detail_show:gene' %}?gene={{ item.coexpress_gene }}" target="view_window">{{ item.coexpress_gene }}</a></td>
+                    <td>{{ item.cor }}</td>
+                    <td>{{ item.p_value }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 </body>
