@@ -1,4 +1,4 @@
-.body{
+body{
     margin: 0 auto 20px;
     width: 900px;
     border: 1px solid lightgray;
@@ -18,8 +18,8 @@
     width: 800px;
 }
 .table{
-    margin: 0 auto;
+    margin: 0 auto 20px;
     width: 800px;
-    height: 500px;
+    /* height: 500px; */
     /* border: 1px solid lightgray; */
 }

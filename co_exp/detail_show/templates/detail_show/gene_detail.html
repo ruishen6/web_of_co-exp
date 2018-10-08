@@ -7,7 +7,43 @@
 <head>
     <meta charset="UTF-8">
     <title>gene_detail</title>
-    <link href="{% static 'css/co-expression.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/gene.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- <script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script> -->
+    <script>
+        function click_a(divDisplay){
+            if(document.getElementById(divDisplay).style.display != "block"){
+                document.getElementById(divDisplay).style.display = "block";
+                show.innerHTML = "Hide data";
+            }
+            else{
+                document.getElementById(divDisplay).style.display = "none";
+                show.innerHTML = "Show data";
+            }
+        }
+        function click_b(divDisplay){
+            if(document.getElementById(divDisplay).style.display != "block"){
+                document.getElementById(divDisplay).style.display = "block";
+            }
+            else{
+                document.getElementById(divDisplay).style.display = "none";
+            }
+        }
+    </script>
+
+    <!-- <script>
+        $(document).ready(function () {
+            $("#btn").click(function () {
+                var b = $(this);
+                var a = $("#data");
+                if (a.hasClass("collapse in")) {
+                    b.text('Show data');
+                } else {
+                    b.text('Hidden data');
+                }
+            })
+        })
+    </script> -->
 </head>
 
 
@@ -20,20 +56,25 @@
     </div>
 
 
-    <div class="table">
-        <p>Gene Accession: {{ accession }}</p>
-        {% for item in desc.all %}
-            <p>Description: {{ item.description }}</p>
-            <p>Alias：{{ item.alias }}</p>
-            <p>Location：{{ item.location }}</p>
-        {% endfor %}
-        <p>Gene Ontology:</p>
-        {% for item in go_numbers %}
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://amigo.geneontology.org/amigo/term/{{ item }}" target="view_window">{{ item }}</a></p>
-        {% endfor %}
-        <p>KEGG:</p>
-        {% for item in kegg_numbers %}
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kegg.jp/dbget-bin/www_bget?ko:{{ item }}" target="view_window">{{ item }}</a></p>
+    <div onclick="return click_a('data')" class="show" id="show"><a>Show data</a></div>
+    <!-- <div class="show"><a data-toggle="collapse" href="#showtable" aria-expanded="false" id="btn">Show data</a></div> -->
+    <div class="data" id="data">
+        {% for item in details %}
+        <div onclick="return click_b('{{ item.accession }}')" class="click"><a>{{ item.accession }}</a></div>
+        <div class="table" id="{{ item.accession }}">
+            <p>Gene Accession: {{ item.accession }}</p>
+                <p>Description: {{ item.desc.description }}</p>
+                <p>Alias：{{ item.desc.alias }}</p>
+                <p>Location：{{ item.desc.location }}</p>
+            <p>Gene Ontology:</p>
+            {% for i in item.go_number %}
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://amigo.geneontology.org/amigo/term/{{ item }}" target="view_window">{{ i }}</a></p>
+            {% endfor %}
+            <p>KEGG:</p>
+            {% for i in item.ko_number %}
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kegg.jp/dbget-bin/www_bget?ko:{{ item }}" target="view_window">{{ i }}</a></p>
+            {% endfor %}
+        </div>
         {% endfor %}
     </div>
 </div>

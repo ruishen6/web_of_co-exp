@@ -9,16 +9,42 @@
     <title>co-exp</title>
     <link href="{% static 'css/co-expression.css' %}" rel="stylesheet" type="text/css">
 
+    <!-- vis -->
     <link href="{% static 'css/vis.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.dataTables.css' %}">	
+    <!-- dataTables -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.dataTables.min.css' %}">	
+    <link rel="stylesheet" type="text/css" href="{% static 'css/buttons.dataTables.min.css' %}">	
 
+    <!-- vis -->
     <script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'js/vis.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/jquery.dataTables.js' %}"></script>
+    <!-- dataTables -->
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.buttons.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/buttons.html5.min.js' %}"></script>
     
     <script>
         $(document).ready( function () {
-            $('#datatable').DataTable();
+            $('#datatable').DataTable({
+                // "dom": '<"top"flB>rt<"bottom"ip><"clear">',
+                "dom": '<"top"fB>rt<"bottom"ip><"clear">',
+                buttons: [                      //set buttons
+                    'pageLength',               //a direct replacement to the DataTables default length list
+                    {
+                        extend: 'csvHtml5',     //export data to a csv file
+                        text: 'Data export'
+                    }
+                ],
+                language: {                     //change the display on the 'pageLength' buttons
+                    buttons: {
+                        pageLength: {
+                            _: "Show %d entries",
+                            '-1': "Show all entries"
+                        }
+                    }
+                },
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]] //lengthMenu adjust
+            });
         } );
     </script>
 
@@ -91,7 +117,7 @@
 
 
     <div class="table">
-        <table id="datatable">
+        <table id="datatable" class="display">
             <thead>
                 <tr>
                     <th>Gene One</th>

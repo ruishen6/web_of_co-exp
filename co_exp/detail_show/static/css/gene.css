@@ -1,0 +1,41 @@
+body{
+    margin: 0 auto 20px;
+    width: 900px;
+    border: 1px solid lightgray;
+}
+.h{
+    margin: 0 auto;
+    width: 800px;
+}
+.show{
+    margin: 0 auto 10px 50px;
+    width: 100px;
+    height: 40px;
+    border: 1px solid lightgray;
+    background: rgb(111, 201, 243);
+
+    text-align: center;     /* keep text centre */
+    line-height: 40px;      /* keep text centre */
+    cursor: default;        /* keep mouse arrow-shaped when it's on text */
+}
+.data{
+    margin: 0 auto 20px;
+    width: 800px;
+    display: none;         /* crucial to make table hidden at first */
+}
+.click{
+    margin: 0 auto 10px 20px;
+    width: 120px;
+    height: 30px;
+    border: 1px solid lightgray;
+    background: rgb(111, 201, 243);
+
+    text-align: center;     /* keep text centre */
+    line-height: 30px;      /* keep text centre */
+    cursor: default;        /* keep mouse arrow-shaped when it's on text */
+}
+.table{
+    margin: 0 auto 20px 20px;
+    width: 800px;
+    display: none;         /* crucial to make table hidden at first */
+}
