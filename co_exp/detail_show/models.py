@@ -20,3 +20,9 @@ class descs(models.Model):
     description = models.CharField(max_length=200)
     alias = models.CharField(max_length=20)
     location = models.CharField(max_length=100)
+
+class heatmap(models.Model):
+    geneaccession = models.CharField(max_length=15)
+    runid = models.CharField(max_length=12)
+    tpm = models.CharField(max_length=20)
+    tissue = models.CharField(max_length=15)

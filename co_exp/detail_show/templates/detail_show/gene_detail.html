@@ -8,8 +8,9 @@
     <meta charset="UTF-8">
     <title>gene_detail</title>
     <link href="{% static 'css/gene.css' %}" rel="stylesheet" type="text/css">
-
-    <!-- <script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script> -->
+    <!-- heatmap -->
+    <script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/echarts.min.js' %}"></script>
     <script>
         function click_a(divDisplay){
             if(document.getElementById(divDisplay).style.display != "block"){
@@ -79,5 +80,142 @@
     </div>
 </div>
 
+
+<div id="heatmap" class="heatmap"></div>
+<script type="text/javascript">
+    $("#network").html("<img src='{% static 'images/loading.gif' %}'/>");
+    var parameter = 'genes='+'{{ accession }}';
+    var s_url = "{% url 'detail_show:heatmap' %}";
+    var url = s_url+'?'+parameter;
+
+    $.ajax({
+        url: url,
+        type: "get",
+        dataType: "json",
+        success: function (data) {
+            data = JSON.parse(data);
+            var myChart = echarts.init(document.getElementById('heatmap'));
+            var genes = data[0].genes;
+            var runs = data[0].ssrs;
+            var exps = data[0].expression;
+            var tissues = data[0].tissues;
+
+            // exp = exp.map(function (item) {
+            //     return [item[1], item[0], item[2] || '-'];
+            // });
+
+            option = {
+                // tooltip: {
+                //     position: 'top'
+                // },
+                title: {
+                    text:'Heat Map'
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        // dataView: {readOnly: false},
+                        // magicType: {type: ['line', 'bar']},
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                tooltip: {
+                    position: 'top',
+                    formatter: function (params) {
+                        return  'Gene：'+genes[params.value[1]]+'<br/>'+ 'Run：'+runs[params.value[0]]+'<br/>'+'TPM(log10)： '+params.value[2]+'<br/>'+'Tissue: '+tissues[params.value[0]];
+                    }
+                },
+                animation: false,
+                grid: {
+                    height: '60%',
+                    y: '10%',
+                },
+                xAxis: {
+                    type: 'category',
+                    data: runs,
+                    splitArea: {
+                        show: true
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: genes,
+                    splitArea: {
+                        show: true
+                    }
+                },
+                dataZoom: [
+                    {
+                        type: 'slider',
+                        show: true,
+                        xAxisIndex: [0],
+                        start: 0,
+                        end: 100
+                    },
+                    {
+                        type: 'slider',
+                        show: true,
+                        yAxisIndex: [0],
+                        left: '94%',
+                        start: 0,
+                        end: 100
+                    },
+                    {
+                        type: 'inside',
+                        xAxisIndex: [0],
+                        start: 0,
+                        end: 100
+                    },
+                    {
+                        type: 'inside',
+                        yAxisIndex: [0],
+                        start: 0,
+                        end: 100
+                    }
+                ],
+                visualMap: {
+                    min: -2,
+                    max: 6,
+                    calculable: true,
+                    inRange: {
+                        // color: ['', '#78b8ed', ''],
+                           color: ['lightskyblue', '#fffbbc', '#c4463a','red']
+                        // symbolSize: [30, 100]
+                    },
+                    realtime: true,
+                    precision: 2,
+                    align: 'left',
+                    orient: 'horizontal',
+                    left: 'center',
+                    bottom: '60',
+                    itemHeight: 250,
+                },
+                series: [{
+                    name: 'Punch Card',
+                    type: 'heatmap',
+                    data: exps,
+                    // label: {
+                    //     normal: {
+                    //         color: '#0F0F0F',
+                    //         show: true
+                    //     }
+                    // },
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            };
+            myChart.setOption(option);
+        }
+    });
+
+</script>
 </body>
 </html>

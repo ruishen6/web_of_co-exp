@@ -9,28 +9,27 @@ def gene_detail(request):
         accession = request.GET['gene']
 
     gene_accessions = accession.split(',')
-    length = len(gene_accessions)
 
     desc = descs.objects.filter(geneaccession__in=gene_accessions)
     desc_dict = {}
-    for i in range(length):
-        desc_dict[gene_accessions[i]] = desc[i]
+    for item in desc:
+        desc_dict[item.geneaccession] = item
 
     go = ontology.objects.filter(geneaccession__in=gene_accessions)
     go_dict = {}
-    for i in range(length):
+    for item in go:
         go_numbers = []
-        content = go[i].geneontology
+        content = item.geneontology
         go_numbers = content.strip().split(',')
-        go_dict[gene_accessions[i]] = go_numbers
+        go_dict[item.geneaccession] = go_numbers
 
     ko = kegg.objects.filter(geneaccession__in=gene_accessions)
     ko_dict = {}
-    for i in range(length):
+    for item in ko:
         ko_numbers = []
-        content = ko[i].genekegg
+        content = item.genekegg
         ko_numbers = content.strip().split(',')
-        ko_dict[gene_accessions[i]] = ko_numbers
+        ko_dict[item.geneaccession] = ko_numbers
 
     details = []
     for item in gene_accessions:
@@ -41,7 +40,7 @@ def gene_detail(request):
         detail['ko_number'] = ko_dict[item]
         details.append(detail)
     
-    context = {'details':details}
+    context = {'details':details, 'accession':accession}
 
 
     

@@ -1,7 +1,7 @@
 from django.urls import path,re_path
 from . import views
 from django.views.decorators.csrf import csrf_exempt
-from .split_views import coexp, network, gene
+from .split_views import coexp, network, gene, heatmap
 
 app_name = 'detail_show'
 urlpatterns = [
@@ -11,5 +11,6 @@ urlpatterns = [
     path('co-search', views.co_search, name='co-search'),
     re_path(r'network$', network.network_json, name='network'),
     path('search', views.search, name='search'),
-    re_path(r'gene$', gene.gene_detail,name='gene')
+    re_path(r'gene$', gene.gene_detail, name='gene'),
+    re_path(r'heatmap$', heatmap.heatmap_json, name='heatmap')
 ]
