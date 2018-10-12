@@ -7,6 +7,10 @@ body{
     margin: 0 auto;
     width: 800px;
 }
+.no_id{
+    margin: 0 auto;
+    width: 800px;
+}
 .show{
     margin: 0 auto 10px 50px;
     width: 100px;
@@ -39,9 +43,23 @@ body{
     width: 800px;
     display: none;         /* crucial to make table hidden at first */
 }
+.boxplot{
+    width: 800px;
+    height: 600px;
+    margin: 50px auto 10px 0;
+    border: 1px solid lightgray;
+}
 .heatmap{
     width: 900px;
-    height: 500px;
+    height: 600px;
     margin: 50px auto 10px 0;
     /* border: 1px solid lightgray; */
+}
+.total{
+    margin: 20px auto 40px;
+    width: 800px;
+}
+.tissue{
+    margin: 0 auto 40px;
+    width: 740px;
 }

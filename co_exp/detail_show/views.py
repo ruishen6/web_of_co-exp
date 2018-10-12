@@ -13,3 +13,6 @@ def co_search(request):
 
 def search(request):
     return render(request, 'detail_show/gene_search.html')
+
+# def not_found(request):
+#     return render(request, 'detail_show/404_not_found.html')

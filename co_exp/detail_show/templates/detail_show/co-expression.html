@@ -59,6 +59,10 @@
         <h2>Co Expression</h2>
     </div>
 
+    {% if not_found_accession %}
+    <div class="no_id"><p>Cannot find {{ not_found_accession }} in database</p></div>
+    {% endif %}
+
     <div id="network" class="co-network"></div>
     <script>
         $("#network").html("<img src='{% static 'images/loading.gif' %}'/>");

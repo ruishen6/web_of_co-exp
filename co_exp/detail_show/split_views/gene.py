@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from detail_show.models import genelist, descs, ontology, kegg
+from detail_show.models import genelist, descs, ontology, kegg, heatmap
 
 def gene_detail(request):
     accession = ''
@@ -9,6 +9,29 @@ def gene_detail(request):
         accession = request.GET['gene']
 
     gene_accessions = accession.split(',')
+    gene_accessions = list(set(gene_accessions))
+    gene_accessions.sort()
+
+    # judge not found gene
+    all_kegg = kegg.objects.all()
+    all_accessions = []
+    for item in all_kegg:
+        all_accessions.append(item.geneaccession)
+    rep_gene_accessions = accession.split(',')
+    rep_gene_accessions = list(set(rep_gene_accessions))
+
+    # if use sentence like bellow --> error occurred
+    # rep_gene_accessions = gene_accessions
+    # ????? TEA012168.1,TEA015139.1,TEA026434.1 or aa,bb
+    not_found_genes = []
+    for item in rep_gene_accessions:
+        if item not in all_accessions:
+            gene_accessions.remove(item)
+            not_found_genes.append(item)
+    accession = ','.join(gene_accessions)
+    not_found_accession = ','.join(not_found_genes)
+    # if not accession:
+    #     return render(request, 'detail_show/404_not_found.html')
 
     desc = descs.objects.filter(geneaccession__in=gene_accessions)
     desc_dict = {}
@@ -40,8 +63,28 @@ def gene_detail(request):
         detail['ko_number'] = ko_dict[item]
         details.append(detail)
     
-    context = {'details':details, 'accession':accession}
-
-
+    heatmap_details = heatmap.objects.filter(geneaccession__in=gene_accessions)
+    heatmap_total = {}
+    heatmap_total['gene_num'] = len(gene_accessions)
+    runs = []
+    tissues = []
+    tissues_num = []
+    for item in heatmap_details:
+        runs.append(item.runid)
+        tissues.append(item.tissue)
+        tissues_num.append(item.tissue)
+    runs = list(set(runs))
+    heatmap_total['run_num'] = len(runs)
+    tissues_num = list(set(tissues_num))
+    tissues_num.sort()
+    heatmap_total['tissue_num'] = len(tissues_num)
+    heatmap_total['tissues'] = []
+    for item in tissues_num:
+        content = item + ': ' + str(int(tissues.count(item)/len(gene_accessions)))
+        heatmap_total['tissues'].append(content)
     
+
+
+    context = {'details':details, 'accession':accession, 'not_found_accession':not_found_accession, 'heatmap_total':heatmap_total}
+
     return render(request, 'detail_show/gene_detail.html', context)

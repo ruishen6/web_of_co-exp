@@ -11,6 +11,7 @@
     <!-- heatmap -->
     <script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/echarts.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTool.min.js' %}"></script>
     <script>
         function click_a(divDisplay){
             if(document.getElementById(divDisplay).style.display != "block"){
@@ -56,6 +57,9 @@
         <h2>gene_detail</h2>
     </div>
 
+    {% if not_found_accession %}
+    <div class="no_id"><p>Cannot find {{ not_found_accession }} in database</p></div>
+    {% endif %}
 
     <div onclick="return click_a('data')" class="show" id="show"><a>Show data</a></div>
     <!-- <div class="show"><a data-toggle="collapse" href="#showtable" aria-expanded="false" id="btn">Show data</a></div> -->
@@ -69,12 +73,123 @@
                 <p>Location：{{ item.desc.location }}</p>
             <p>Gene Ontology:</p>
             {% for i in item.go_number %}
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://amigo.geneontology.org/amigo/term/{{ item }}" target="view_window">{{ i }}</a></p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://amigo.geneontology.org/amigo/term/{{ i }}" target="view_window">{{ i }}</a></p>
             {% endfor %}
             <p>KEGG:</p>
             {% for i in item.ko_number %}
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kegg.jp/dbget-bin/www_bget?ko:{{ item }}" target="view_window">{{ i }}</a></p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.kegg.jp/dbget-bin/www_bget?ko:{{ i }}" target="view_window">{{ i }}</a></p>
             {% endfor %}
+            <div id="boxplot_{{  item.accession  }}" class="boxplot"></div>
+            <script type="text/javascript">
+                $("#boxplot_{{  item.accession  }}").html("<img src='{% static 'images/loading.gif' %}'/>");
+                var parameter = 'gene='+'{{ item.accession }}';
+                var s_url = "{% url 'detail_show:boxplot' %}";
+                var url = s_url+'?'+parameter;
+            
+                $.ajax({
+                    url: url,
+                    type: "get",
+                    dataType: "json",
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        var myChart = echarts.init(document.getElementById('boxplot_{{  item.accession  }}'));
+                        
+                        // use dataTool.min.js echarts.dataTool.prepareBoxplotData
+                        var box_data = echarts.dataTool.prepareBoxplotData(data[0].values);
+                        var x_data = data[0].tissues;
+            
+                        option = {
+                            title: [
+                                {
+                                    text: '{{  item.accession  }}',
+                                    left: 'center',
+                                },
+                                {
+                                    text: 'upper: Q3 + 1.5 * IQR \nlower: Q1 - 1.5 * IQR',
+                                    borderColor: '#999',
+                                    borderWidth: 1,
+                                    textStyle: {
+                                        fontSize: 10
+                                    },
+                                    // left: '80%',
+                                    // top: '90%'
+                                    right: 0,
+                                    bottom: 0
+                                }
+                            ],
+                            toolbox: {
+                                show: true,
+                                feature: {
+                                    dataZoom: {
+                                        yAxisIndex: 'none'
+                                    },
+                                    restore: {},
+                                    saveAsImage: {}
+                                }
+                            },
+                            tooltip: {
+                                trigger: 'item',
+                                axisPointer: {
+                                    type: 'shadow'
+                                }
+                            },
+                            grid: {
+                                left: '10%',
+                                right: '10%',
+                                bottom: '15%'
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: x_data,
+                                // boundaryGap: true,
+                                // nameGap: 30,
+                                splitArea: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    rotate: 60
+                                },
+                                splitLine: {
+                                    show: false
+                                }
+                            },
+                            yAxis: {
+                                type: 'value',
+                                name: 'Expression level(TPM)',
+                                splitArea: {
+                                    show: true
+                                }
+                            },
+                            series: [
+                                {
+                                    name: 'boxplot',
+                                    type: 'boxplot',
+                                    data: box_data.boxData,
+                                    tooltip: {
+                                        formatter: function (param) {
+                                            return [
+                                                'Tissue ' + param.name + ': ',
+                                                'upper: ' + param.data[5],
+                                                'Q3: ' + param.data[4],
+                                                'median: ' + param.data[3],
+                                                'Q1: ' + param.data[2],
+                                                'lower: ' + param.data[1]
+                                            ].join('<br/>');
+                                        }
+                                    }
+                                },
+                                {
+                                    name: 'outlier',
+                                    type: 'scatter',
+                                    data: box_data.outliers
+                                }
+                            ]
+                        };
+            
+                        myChart.setOption(option);
+                    }
+                });
+            </script>
         </div>
         {% endfor %}
     </div>
@@ -83,7 +198,7 @@
 
 <div id="heatmap" class="heatmap"></div>
 <script type="text/javascript">
-    $("#network").html("<img src='{% static 'images/loading.gif' %}'/>");
+    $("#heatmap").html("<img src='{% static 'images/loading.gif' %}'/>");
     var parameter = 'genes='+'{{ accession }}';
     var s_url = "{% url 'detail_show:heatmap' %}";
     var url = s_url+'?'+parameter;
@@ -99,6 +214,7 @@
             var runs = data[0].ssrs;
             var exps = data[0].expression;
             var tissues = data[0].tissues;
+            var ranges = data[0].ranges;
 
             // exp = exp.map(function (item) {
             //     return [item[1], item[0], item[2] || '-'];
@@ -139,6 +255,12 @@
                     data: runs,
                     splitArea: {
                         show: true
+                    },
+                    axisLabel: {
+                        rotate: 60
+                    },
+                    splitLine: {
+                        show: true
                     }
                 },
                 yAxis: {
@@ -178,12 +300,15 @@
                     }
                 ],
                 visualMap: {
-                    min: -2,
-                    max: 6,
+                    min: ranges[0],
+                    max: ranges[1],
+                    // min: -2,
+                    // max: 6,
                     calculable: true,
                     inRange: {
-                        // color: ['', '#78b8ed', ''],
-                           color: ['lightskyblue', '#fffbbc', '#c4463a','red']
+                        // color: ['lightskyblue', '#78b8ed', 'red'],
+                        color: ['lightskyblue', '#fffbbc', '#c4463a','red']
+                        // color: ['white', 'blue']
                         // symbolSize: [30, 100]
                     },
                     realtime: true,
@@ -191,7 +316,7 @@
                     align: 'left',
                     orient: 'horizontal',
                     left: 'center',
-                    bottom: '60',
+                    bottom: '10%',
                     itemHeight: 250,
                 },
                 series: [{
@@ -215,7 +340,17 @@
             myChart.setOption(option);
         }
     });
-
 </script>
+
+<div class="total">
+    <a>Gene numbers: {{ heatmap_total.gene_num }}</a><br/>
+    <a>Run number: {{ heatmap_total.run_num }}</a><br/>
+    <a>Tissue number: {{ heatmap_total.tissue_num }}</a>
+    <div class="tissue">
+        {% for item in heatmap_total.tissues %}
+        <a>{{ item }}</a>&nbsp;&nbsp;
+        {% endfor %}
+    </div>
+</div>
 </body>
 </html>

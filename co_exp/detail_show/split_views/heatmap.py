@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+# from django.http import HttpResponse
+from django.shortcuts import HttpResponse
 from detail_show.models import heatmap
 
 import math
@@ -9,8 +10,23 @@ def heatmap_json(request):
     accession = request.GET['genes']
     gene_accessions = accession.split(',')
 
-    details = heatmap.objects.filter(geneaccession__in=gene_accessions)
+    rep_details = heatmap.objects.filter(geneaccession__in=gene_accessions)
 
+    # sort by tissue&gene
+    gene_accessions.sort(reverse=True)
+    tissues_ready = []
+    for item in rep_details:
+        tissues_ready.append(item.tissue)
+    tissues_ready = list(set(tissues_ready))
+    tissues_ready.sort()
+    details = []
+    for tissue_item in tissues_ready:
+        for item in rep_details:
+            if tissue_item == item.tissue:
+                details.append(item)
+
+
+    # json data
     y_gene_head = '[{"genes":['
     genes = []
     for item in gene_accessions:
@@ -21,8 +37,10 @@ def heatmap_json(request):
     ssrs = []
     for item in details:
         content = '"' + item.runid + '"'
-        ssrs.append(content)
-    ssrs = list(set(ssrs))
+        if content not in ssrs:
+            ssrs.append(content)
+    # ssrs = list(set(ssrs))
+    # list(set()) will make list unordered
 
     exp_head = '],"expression":['
     exps_dict = {}
@@ -33,6 +51,7 @@ def heatmap_json(request):
         tissues_dict[item.runid] = item.tissue
     exps = []
     i,j = 0,0
+    log10_tpms = []
     for gene in genes:
         i = 0
         for ssr in ssrs:
@@ -42,6 +61,7 @@ def heatmap_json(request):
                 log_tpm = 0
             else:
                 log_tpm = math.log10(float(tpm))
+                log10_tpms.append(log_tpm)
             content = '[' + str(i) + ',' + str(j) + ',' + str(log_tpm) + ']'
             exps.append(content)
             i += 1
@@ -53,10 +73,16 @@ def heatmap_json(request):
         item = item.strip('"')
         content = '"' + tissues_dict[item] + '"'
         tissues.append(content)
+    
+    ranges_head = '],"ranges":['
 
     end = ']}]'
+    if len(log10_tpms) != 0:
+        max_tpm = max(log10_tpms)
+        min_tpm = min(log10_tpms)
+        ranges = [str(math.floor(min_tpm)),str(math.ceil(max_tpm))]
+        heatmap_data = y_gene_head + ','.join(genes) + x_ssr_head + ','.join(ssrs) + exp_head + ','.join(exps) + tissue_head +  ','.join(tissues) + ranges_head + ','.join(ranges) + end
+    else:
+        heatmap_data = y_gene_head + ','.join(genes) + x_ssr_head + ','.join(ssrs) + exp_head + ','.join(exps) + tissue_head +  ','.join(tissues) + end
 
-    # json text
-    heatmap_data = y_gene_head + ','.join(genes) + x_ssr_head + ','.join(ssrs) + exp_head + ','.join(exps) + tissue_head +  ','.join(tissues) + end
-    # network.html
     return HttpResponse(json.dumps(heatmap_data), content_type="application/json")

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from detail_show.models import genelist
+from detail_show.models import genelist,kegg
 
 
 
@@ -15,6 +15,23 @@ def co_expression(request):
         accession = request.GET['genes']
         co_cor = request.GET['cor']
     gene_accessions = accession.split(',')
+
+    # judge not found
+    all_kegg = kegg.objects.all()
+    all_accessions = []
+    for item in all_kegg:
+        all_accessions.append(item.geneaccession)
+    rep_gene_accessions = accession.split(',')
+    # if use sentence like bellow --> error occurred
+    # rep_gene_accessions = gene_accessions
+    # ????? TEA012168.1,TEA015139.1,TEA026434.1
+    not_found_genes = []
+    for item in rep_gene_accessions:
+        if item not in all_accessions:
+            gene_accessions.remove(item)
+            not_found_genes.append(item)
+    accession = ','.join(gene_accessions)
+    not_found_accession = ','.join(not_found_genes)
 
     # remove duplication from the gene_list which originated from acquired accession
     rep_gene_list = genelist.objects.filter(geneaccession__in=gene_accessions, cor__gte=co_cor)
