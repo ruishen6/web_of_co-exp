@@ -58,7 +58,7 @@
     </div>
 
     {% if not_found_accession %}
-    <div class="no_id"><p>Cannot find {{ not_found_accession }} in database</p></div>
+    <div class="no_id"><pre>Cannot find <i>{{ not_found_accession }}</i> in database</pre></div>
     {% endif %}
 
     <div onclick="return click_a('data')" class="show" id="show"><a>Show data</a></div>

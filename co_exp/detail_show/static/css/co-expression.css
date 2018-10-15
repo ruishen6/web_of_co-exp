@@ -11,6 +11,10 @@ body{
     margin: 0 auto;
     width: 800px;
 }
+pre{
+   /* white-space:pre-wrap; */
+   overflow:auto;
+}
 .co-network {
     margin: 0 auto;
     width: 800px;

@@ -10,6 +10,11 @@ body{
 .no_id{
     margin: 0 auto;
     width: 800px;
+    /* border: 1px solid lightgray; */
+}
+pre{
+   /* white-space:pre-wrap; */
+   overflow:auto;
 }
 .show{
     margin: 0 auto 10px 50px;
@@ -53,7 +58,7 @@ body{
     width: 900px;
     height: 600px;
     margin: 50px auto 10px 0;
-    /* border: 1px solid lightgray; */
+    border: 1px solid lightgray;
 }
 .total{
     margin: 20px auto 40px;

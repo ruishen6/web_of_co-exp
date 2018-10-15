@@ -23,30 +23,7 @@
     <script type="text/javascript" src="{% static 'js/dataTables.buttons.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/buttons.html5.min.js' %}"></script>
     
-    <script>
-        $(document).ready( function () {
-            $('#datatable').DataTable({
-                // "dom": '<"top"flB>rt<"bottom"ip><"clear">',
-                "dom": '<"top"fB>rt<"bottom"ip><"clear">',
-                buttons: [                      //set buttons
-                    'pageLength',               //a direct replacement to the DataTables default length list
-                    {
-                        extend: 'csvHtml5',     //export data to a csv file
-                        text: 'Data export'
-                    }
-                ],
-                language: {                     //change the display on the 'pageLength' buttons
-                    buttons: {
-                        pageLength: {
-                            _: "Show %d entries",
-                            '-1': "Show all entries"
-                        }
-                    }
-                },
-                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]] //lengthMenu adjust
-            });
-        } );
-    </script>
+
 
 </head>
 
@@ -60,7 +37,7 @@
     </div>
 
     {% if not_found_accession %}
-    <div class="no_id"><p>Cannot find {{ not_found_accession }} in database</p></div>
+    <div class="no_id"><pre>Cannot find <i>{{ not_found_accession|linebreaksbr }}</i>, maybe you should lower the threshold of the correlation coefficient.</pre></div>
     {% endif %}
 
     <div id="network" class="co-network"></div>
@@ -142,6 +119,30 @@
             </tbody>
         </table>
     </div>
+    <script>
+        $(document).ready( function () {
+            $('#datatable').DataTable({
+                // "dom": '<"top"flB>rt<"bottom"ip><"clear">',
+                "dom": '<"top"fB>rt<"bottom"ip><"clear">',
+                buttons: [                      //set buttons
+                    'pageLength',               //a direct replacement to the DataTables default length list
+                    {
+                        extend: 'csvHtml5',     //export data to a csv file
+                        text: 'Data export'
+                    }
+                ],
+                language: {                     //change the display on the 'pageLength' buttons
+                    buttons: {
+                        pageLength: {
+                            _: "Show %d entries",
+                            '-1': "Show all entries"
+                        }
+                    }
+                },
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]] //lengthMenu adjust
+            });
+        } );
+    </script>
 </div>
 
 </body>

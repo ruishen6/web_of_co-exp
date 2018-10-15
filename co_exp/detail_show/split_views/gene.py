@@ -8,35 +8,44 @@ def gene_detail(request):
     if request.method == 'GET':
         accession = request.GET['gene']
 
-    gene_accessions = accession.split(',')
-    gene_accessions = list(set(gene_accessions))
-    gene_accessions.sort()
-
-    # judge not found gene
-    all_kegg = kegg.objects.all()
-    all_accessions = []
-    for item in all_kegg:
-        all_accessions.append(item.geneaccession)
     rep_gene_accessions = accession.split(',')
     rep_gene_accessions = list(set(rep_gene_accessions))
+    rep_gene_accessions.sort()
 
-    # if use sentence like bellow --> error occurred
-    # rep_gene_accessions = gene_accessions
-    # ????? TEA012168.1,TEA015139.1,TEA026434.1 or aa,bb
+    # # judge not found gene
+    # all_kegg = kegg.objects.all()
+    # all_accessions = []
+    # for item in all_kegg:
+    #     all_accessions.append(item.geneaccession)
+    # rep_gene_accessions = accession.split(',')
+    # rep_gene_accessions = list(set(rep_gene_accessions))
+
+    # # if use sentence like bellow --> error occurred
+    # # rep_gene_accessions = gene_accessions
+    # # ????? TEA012168.1,TEA015139.1,TEA026434.1 or aa,bb
+    # not_found_genes = []
+    # for item in rep_gene_accessions:
+    #     if item not in all_accessions:
+    #         gene_accessions.remove(item)
+    #         not_found_genes.append(item)
+    # accession = ','.join(gene_accessions)
+    # not_found_accession = ','.join(not_found_genes)
+    # # if not accession:
+    # #     return render(request, 'detail_show/404_not_found.html')
+
+    desc = descs.objects.filter(geneaccession__in=rep_gene_accessions)
+    desc_dict = {}
+    gene_accessions = []
+    for item in desc:
+        desc_dict[item.geneaccession] = item
+    # judge not found gene
+        gene_accessions.append(item.geneaccession)
     not_found_genes = []
     for item in rep_gene_accessions:
-        if item not in all_accessions:
-            gene_accessions.remove(item)
+        if item not in gene_accessions:
             not_found_genes.append(item)
     accession = ','.join(gene_accessions)
     not_found_accession = ','.join(not_found_genes)
-    # if not accession:
-    #     return render(request, 'detail_show/404_not_found.html')
-
-    desc = descs.objects.filter(geneaccession__in=gene_accessions)
-    desc_dict = {}
-    for item in desc:
-        desc_dict[item.geneaccession] = item
 
     go = ontology.objects.filter(geneaccession__in=gene_accessions)
     go_dict = {}
