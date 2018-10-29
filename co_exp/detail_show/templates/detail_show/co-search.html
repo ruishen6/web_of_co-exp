@@ -24,7 +24,6 @@
 <body>
     <div class="d1">
         <form action="{% url 'detail_show:co-expression' %}" method="POST">
-            {% csrf_token %}
             <div>
                 <label>Gene ID:</label><br/>
                 <textarea id='co-gene' rows="10" cols="50" name="co-gene_ids" required></textarea>  <!-- required 属性规定必需在提交之前填写输入字段。 -->
@@ -38,7 +37,9 @@
                 <label>Pearson's r-value:</label><br/>
                 <input type="text" value="0.9" id="co-cor" name="cor"/>
             </div>
+            <br/>
             <div>
+                {% csrf_token %}
                 <input type="submit" value="search" name='submitBtn' id="sub"/>
             </div>
         </form>

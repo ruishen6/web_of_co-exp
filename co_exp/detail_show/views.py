@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
@@ -14,5 +14,9 @@ def co_search(request):
 def search(request):
     return render(request, 'detail_show/gene_search.html')
 
-# def not_found(request):
-#     return render(request, 'detail_show/404_not_found.html')
+def blast(request):
+    return render(request, 'detail_show/blast.html')
+
+def not_found(request):
+    return render(request, 'detail_show/404.html')
+    # return render_to_response('404.html')

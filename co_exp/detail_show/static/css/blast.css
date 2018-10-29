@@ -1,0 +1,29 @@
+.content{
+    width: 900px;
+    margin: 0 auto 0;
+}
+.fasta:link {
+    color: darkblue;
+    text-decoration: none;
+}
+.fasta:visited {
+    color: darkblue;
+    text-decoration: none;
+}
+.fasta:hover {
+    color: darkblue;
+    text-decoration: underline;
+}
+
+.exps{
+    color:gray;
+    /* color: aqua; */
+}
+.exp {
+    cursor: pointer;
+    color: lightblue;
+}
+
+.exp:hover {
+    text-decoration: underline
+}

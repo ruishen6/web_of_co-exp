@@ -40,6 +40,7 @@ def gene_detail(request):
         desc_dict[item.geneaccession] = item
     # judge not found gene
         gene_accessions.append(item.geneaccession)
+    gene_accessions = list(set(gene_accessions))
     not_found_genes = []
     for item in rep_gene_accessions:
         if item not in gene_accessions:

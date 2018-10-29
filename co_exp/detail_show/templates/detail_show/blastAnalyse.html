@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<head>
+<title>blastAnalyse</title>
+<meta charset="utf-8">
+
+<!-- <link
+	href="${ctxStatic}/bootstrap/2.3.1/css_${not empty cookie.theme.value ? cookie.theme.value : 'default'}/bootstrap.min.css"
+	type="text/css" rel="stylesheet" />
+<script src="${ctxStatic}/bootstrap/2.3.1/js/bootstrap.min.js"
+	type="text/javascript"></script> -->
+<!--[if lte IE 6]><link href="${ctxStatic}/bootstrap/bsie/css/bootstrap-ie6.min.css" type="text/css" rel="stylesheet" />
+<script src="${ctxStatic}/bootstrap/bsie/js/bootstrap-ie.min.js" type="text/javascript"></script><![endif]-->
+<style type="text/css">
+input {
+	border: 1px solid #DEDEDE;
+	width: 240px;
+	height: 30px;
+}
+</style>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		try {
+			$("#blast").css({
+				"color" : "",
+				"font-color" : "",
+			});
+			$("#blast").css({
+				"color" : "#1451FE",
+				"font-color" : "#1451FE"
+			});
+		} catch (e) {
+		}
+	});
+</script>
+</head>
+<body>
+	<!--==============================content================================-->
+	<section id="content">
+		<div class="ic"></div>
+		<div class="container_12 top">
+		<c:choose>
+				<c:when test="${rlt eq 0 }">
+		${result }
+		  
+		  </c:when>
+				<c:otherwise>
+				
+<h4>&nbsp;&nbsp;&nbsp;&nbsp;Blast Result in Table format:(click <a target="_blank" href="${ctxf}/blastAnalyseDetail?v1=${v1}&v2=${v2}&v3=${v3}&v4=${v4}&v5=${v5}">here</a> for more details)</h4>
+
+			<div style="margin-left: 13px;">
+				<table class="table table-striped table-bordered table-condensed">
+					<tr>
+						<td>Query id</td>
+						<td>Subject id</td>
+						<td>% identity</td>
+						<td>alignment length</td>
+						<td>mismatches</td>
+						<td>gap opens</td>
+						<td>query start</td>
+						<td>query end</td>
+						<td>subject start</td>
+						<td>subject end</td>
+						<td>e-value</td>
+						<td>bit score</td>
+					</tr>
+
+					<c:forEach items="${result }" var="infor">
+						<tr>
+							<td>${infor.map0 }</td>
+							<td>${infor.map1 }</td>
+							<td>${infor.map2 }</td>
+							<td>${infor.map3 }</td>
+							<td>${infor.map4 }</td>
+							<td>${infor.map5 }</td>
+							<td>${infor.map6 }</td>
+							<td>${infor.map7 }</td>
+							<td>${infor.map8 }</td>
+							<td>${infor.map9 }</td>
+							<td>${infor.map10 }</td>
+							<td>${infor.map11 }</td>
+						</tr>
+					</c:forEach>
+				</table>
+				<div class="clear"></div>
+
+			</div>
+
+	</c:otherwise>
+			</c:choose>
+
+		</div>
+	</section>
+	<!--==============================footer=================================-->
+</body>
+</html>

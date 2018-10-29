@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>blast</title>
+
+	<link href="{% static 'css/blast.css' %}" rel="stylesheet" type="text/css">
+
+	<!-- _.debounce -->
+	<script type="text/javascript" src="{% static 'js/underscore-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+	<!-- <script type="text/javascript" src="{% static 'js/jquery.validate.min.js' %}"></script> -->
+	<script type="text/javascript" src="{% static 'js/blast.js' %}"></script>
+</head>
+
+<body>
+	<!-- <%@include file="/WEB-INF/views/modules/rna/nav.jsp"%> -->
+	<!--==============================content================================-->
+	<section id="content">
+		<!-- <div class="ic"></div> -->
+		<div class="content">
+			<form action="{% url 'detail_show:blastAnalyse' %}" method="post" id="MainBlastForm" enctype="multipart/form-data"
+			 onsubmit="return judge()">
+
+				<!-- <font face="calibri" size="3">The BLAST page allows to conduct sequence similarity search against plant TFs in the database.</font> -->
+
+            <h4>Enter or upload a query sequence to conduct a blast search.</h4>
+				<!-- <HR style="FILTER: alpha(opacity=100,finishopacity=0,style=3)" width="80%" color=#987cb9 SIZE=3> -->
+
+				<div>
+					<!-- <input type="radio" name="condition" value="txt" checked="checked"/> -->
+					<div class="enter-query-text">Enter query sequence(s) below in <a target="_blank" href="https://en.wikipedia.org/wiki/FASTA_format"
+						 class="fasta">FASTA</a> format:</div>
+					<textarea rows="4" cols="666" name="blastTxt" id="blastTxt" style="width: 700px; height: 300px;" required></textarea>
+					<br />
+					<div><span class="exps">[ Click ( <span class="exp" id="exp_nucleotide">nucleotide</span> or <span class="exp" id="exp_peptide">peptide</span>
+							) to Insert Example Input ]</span></div>
+					<!-- <input type="radio" name="condition" value="file" type="file"/> -->
+					Or upload a <a target="_blank" href="https://en.wikipedia.org/wiki/FASTA_format" class="fasta">FASTA</a> file:<br />
+					<table>
+						<tr>
+							<td>
+								<input type="file" class="input" name="blastFile" style="display: none;" id="blastFile" />
+								<input type="text" class="input" id="blastFileCopy" readonly="readonly" />
+							</td>
+							<td><input type="button" value="Select" class="btn" id="selectBlastFile"></td>
+						</tr>
+					</table>
+					<!-- <div>
+                    <span class="btn btn-success fileinput-button">
+                        <span>上传</span>
+                        <input type="file" value="Select">
+                    </span>
+                </div> -->
+					<br />
+				</div>
+				<!-- <fieldset id="fieldset-program"> -->
+				<div id="programs" class="programs">
+					<!-- <legend>Program</legend> -->
+					Program<br />
+					<label class="program blastn">
+						<input type="radio" name="program" value="blastn" checked="checked" class="program blastn">
+						blastn&nbsp;&nbsp;&nbsp;
+					</label>
+					<!-- <label class="program tblastn">
+					<input type="radio" name="program" value="tblastn" class="program tblastn">
+					tblastn
+				</label>
+				<label class="program tblastx">
+					<input type="radio" name="program" value="tblastx" class="program tblastx">
+					tblastx
+				</label> -->
+					<label class="program blastp">
+						<input type="radio" name="program" value="blastp" class="program blastp">
+						blastp&nbsp;&nbsp;&nbsp;
+					</label>
+					<label class="program blastx">
+						<input type="radio" name="program" value="blastx" class="program blastx">
+						blastx
+					</label>
+					<div id="blastProgramDescription">blastn - Nucleotide vs. Nucleotide</div>
+					<br />
+					<div id="buttons">
+						<input type="reset" value="Reset" class="btn_reset">
+						{% csrf_token %}
+						<input type="submit" value="Blast" class="blast_submit">
+					</div>
+				</div>
+				<!-- </fieldset> -->
+				<br/><br/>
+
+
+
+
+
+				<!-- BLAST options start -->
+				<div id="blast_options">
+					<em onclick="return click_show('options-blast')" id="blast_title">+ BLASTN Options</em>
+					<div id="options-blast" style="display: none;">
+						<!-- BLASTN -->
+						<div class="parms blastn-parms" style="display: block;">
+							<div id="fieldset-options-blast-general-param">
+								<legend>General Parameters</legend>
+								<table id="general-param-table">
+									<tbody>
+										<tr>
+											<td>
+												<span class="span-title" title="Number of aligned sequences to keep.">Max target sequences </span>
+											</td>
+											<td>
+												<select id="max_target_seqs" name="max_target_seqs">
+													<option value="10">10</option>
+													<option value="50">50</option>
+													<option value="100" selected="">100</option>
+													<option value="250">250</option>
+													<option value="500">500</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<!-- <td>
+												<span class="span-title" title="Expect value (E) for saving hits.  (Default: 10.0)">Expect threshold </span>
+											</td>
+											<td>
+												<input type="text" id="evalue" name="evalue" value="10.0" size="10" class="input-fields">
+											</td> -->
+											<td><span class="span-title" title="Expect value (E) for saving hits.  (Default: 10.0)">Expect threshold </span></td>
+											<td>
+												<select name="v2">
+													<option value="0.0001">0.0001</option>
+													<option value="0.001">0.001</option>
+													<option value="0.01">0.01</option>
+													<option value="0.1">0.1</option>
+													<option value="1">1</option>
+													<option value="10" selected=''>10</option>
+											  </select>
+										  </td>
+										</tr>
+										<tr>
+											<td>
+												<span class="span-title" id="span_word_size" title="Length of initial exact match. (Default: 11)">Word size
+												</span>
+											</td>
+											<td>
+												<input type="text" id="word_size" name="word_size" value="11" size="10" class="input-fields" required>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<br/>
+
+							<div id="fieldset-options-blast-scoring-param">
+								<legend>Scoring Parameters </legend>
+								<table id="blastn-scoring-param">
+									<tbody>
+										<tr>
+											<td><span title="Reward for a nucleotide match.  (Default: 2)">Match score </span></td>
+											<td><input type="text" id="reward" name="reward" value="2" size="10" class="input-fields" required></td>
+										</tr>
+										<tr>
+											<td><span title="Penalty for a nucleotide mismatch.  (Default: -3)">Mismatch score </span></td>
+											<td>
+												<input type="text" id="penalty" name="penalty" value="-3" size="10" class="input-fields" required></td>
+										</tr>
+										<tr>
+											<td><span title="Cost to open a gap.  (Default: 5)">Gap opening penalty </span></td>
+											<td><input type="text" id="gapopen" name="gapopen" value="5" size="10" class="input-fields" required></td>
+										</tr>
+										<tr>
+											<td><span title="Cost to extend a gap.  (Default: 2)">Gap extension penalty </span></td>
+											<td><input type="text" id="gapextend" name="gapextend" value="2" size="10" class="input-fields" required></td>
+										</tr>
+										<tr>
+											<td><span title="Query strand(s) to search against database/subject.  (Default: both)">Strand </span></td>
+											<td><select id="strand" name="strand">
+													<option value="both" selected="">both</option>
+													<option value="plus">plus</option>
+													<option value="minus">minus</option>
+												</select>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+
+							</div>
+							<br/>
+
+							<div id="fieldset-options-blast-filter-param">
+								<legend>Filters and Masking</legend>
+								<input type="checkbox" class="chk_low_complexity" id="blastn_chk_low_complexity" value="yes" name="chk_low_complexity"
+								 checked="checked"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton &amp; Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)">
+									Low complexity</span><br>
+								<input type="checkbox" class="chk_soft_masking" id="blastn_chk_soft_masking" value="true" name="chk_soft_masking"
+								 checked="checked"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: true)">
+									Mask for lookup table only</span><br>
+							</div>
+						</div>
+						<!-- End BLASTN -->
+
+						<!-- BLASTP -->
+						<div class="parms blastp-parms unselected_parms" style="display: none;">
+							<div id="fieldset-options-blast-general-param">
+								<legend>General Parameters</legend>
+								<table id="general-param-table">
+									<tbody>
+										<tr>
+											<td>
+												<span class="span-title" title="Number of aligned sequences to keep.">Max target sequences </span>
+											</td>
+											<td>
+												<select id="max_target_seqs" name="max_target_seqs">
+													<option value="10">10</option>
+													<option value="50">50</option>
+													<option value="100" selected="">100</option>
+													<option value="250">250</option>
+													<option value="500">500</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td><span class="span-title" title="Expect value (E) for saving hits.  (Default: 10.0)">Expect threshold </span></td>
+											<td>
+												<select name="v2">
+													<option value="0.0001">0.0001</option>
+													<option value="0.001">0.001</option>
+													<option value="0.01">0.01</option>
+													<option value="0.1">0.1</option>
+													<option value="1">1</option>
+													<option value="10" selected=''>10</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<span class="span-title" id="span_word_size" title="Length of initial exact match. (Default: 6)">Word size
+												</span>
+											</td>
+											<td>
+												<input type="text" id="word_size" name="word_size" value="6" size="10" class="input-fields" required>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<br/>
+
+							<div id="fieldset-options-blast-scoring-param">
+								<legend>Scoring Parameters </legend>
+								<table id="blastp-scoring-param">
+									<tbody>
+										<tr>
+											<td><span title="Scoring matrix name.  (Default: BLOSUM62)">Matrix </span></td>
+											<td><select id="matrix" name="matrix">
+													<option value="PAM30">PAM30</option>
+													<option value="PAM70">PAM70</option>
+													<option value="PAM250">PAM250</option>
+													<option value="BLOSUM90">BLOSUM90</option>
+													<option value="BLOSUM80">BLOSUM80</option>
+													<option value="BLOSUM62" selected="">BLOSUM62</option>
+													<option value="BLOSUM50">BLOSUM50</option>
+													<option value="BLOSUM45">BLOSUM45</option>
+												</select></td>
+										</tr>
+										<tr>
+											<td><span title="Minimum score to add a word to the BLAST lookup table.  (Default: 11)">Threshold </span></td>
+											<td><input type="text" id="threshold" name="threshold" value="11" size="10" class="input-fields" required></td>
+										</tr>
+										<tr>
+											<td><span title="Cost to open a gap.  (Default: 11)">Gap opening penalty </span></td>
+											<td><input type="text" id="gapopen" name="gapopen" value="11" size="10" class="input-fields" required></td>
+										</tr>
+										<tr>
+											<td><span title="Cost to extend a gap.  (Default: 1)">Gap extension penalty </span></td>
+											<td><input type="text" id="gapextend" name="gapextend" value="1" size="10" class="input-fields" required></td>
+										</tr>
+									</tbody>
+								</table>
+
+							</div>
+							<br/>
+
+							<div id="fieldset-options-blast-filter-param">
+								<legend>Filters and Masking</legend>
+								<input type="checkbox" class="chk_low_complexity" id="blastp_chk_low_complexity" value="no" name="chk_low_complexity"><span
+								 title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton &amp; Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: no)">
+									Low complexity</span><br>
+								<input type="checkbox" class="chk_soft_masking" id="blastp_chk_soft_masking" value="false" name="chk_soft_masking"><span
+								 title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: false)">
+									Mask for lookup table only</span><br>
+							</div>
+						</div>
+						<!-- End BLASTP -->
+
+						<!-- BLASTX -->
+						<div class="parms blastx-parms unselected_parms" style="display: none;">
+							<div id="fieldset-options-blast-general-param">
+								<legend>General Parameters</legend>
+								<table id="general-param-table">
+									<tbody>
+										<tr>
+											<td>
+												<span class="span-title" title="Number of aligned sequences to keep.">Max target sequences </span>
+											</td>
+											<td>
+												<select id="max_target_seqs" name="max_target_seqs">
+													<option value="10">10</option>
+													<option value="50">50</option>
+													<option value="100" selected="">100</option>
+													<option value="250">250</option>
+													<option value="500">500</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td><span class="span-title" title="Expect value (E) for saving hits.  (Default: 10.0)">Expect threshold </span></td>
+											<td>
+												<select name="v2">
+													<option value="0.0001">0.0001</option>
+													<option value="0.001">0.001</option>
+													<option value="0.01">0.01</option>
+													<option value="0.1">0.1</option>
+													<option value="1">1</option>
+													<option value="10" selected=''>10</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<span class="span-title" id="span_word_size" title="Length of initial exact match. (Default: 6)">Word size
+												</span>
+											</td>
+											<td>
+												<input type="text" id="word_size" name="word_size" value="6" size="10" class="input-fields" required>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<br/>
+
+							<div id="fieldset-options-blast-scoring-param">
+								<legend>Scoring Parameters </legend>
+								<table id="blastx-scoring-param">
+									<tbody>
+										<tr>
+											<td><span title="Scoring matrix name.  (Default: BLOSUM62)">Matrix </span></td>
+											<td><select id="matrix" name="matrix">
+													<option value="PAM30">PAM30</option>
+													<option value="PAM70">PAM70</option>
+													<option value="PAM250">PAM250</option>
+													<option value="BLOSUM90">BLOSUM90</option>
+													<option value="BLOSUM80">BLOSUM80</option>
+													<option value="BLOSUM62" selected="">BLOSUM62</option>
+													<option value="BLOSUM50">BLOSUM50</option>
+													<option value="BLOSUM45">BLOSUM45</option>
+												</select></td>
+										</tr>
+										<tr>
+											<td><span title="Minimum score to add a word to the BLAST lookup table.  (Default: 12)">Threshold </span></td>
+											<td><input type="text" id="threshold" name="threshold" value="12" size="10" class="input-fields" required></td>
+										</tr>
+										<tr>
+											<td><span title="Query strand(s) to search against database/subject.  (Default: both)">Strand </span></td>
+											<td>
+												<select id="strand" name="strand">
+													<option value="both" selected="">both</option>
+													<option value="plus">plus</option>
+													<option value="minus">minus</option>
+												</select></td>
+										</tr>
+										<tr>
+											<td><span title="Cost to open a gap.  (Default: 11)">Gap opening penalty </span></td>
+											<td><input type="text" id="gapopen" name="gapopen" value="11" size="10" class="input-fields" required></td>
+										</tr>
+										<tr>
+											<td><span title="Cost to extend a gap.  (Default: 1)">Gap extension penalty </span></td>
+											<td><input type="text" id="gapextend" name="gapextend" value="1" size="10" class="input-fields" required></td>
+										</tr>
+									</tbody>
+								</table>
+
+							</div>
+							<br/>
+
+							<div id="fieldset-options-blast-filter-param">
+								<legend>Filters and Masking</legend>
+								<input type="checkbox" class="chk_low_complexity" id="blastx_chk_low_complexity" value="yes" name="chk_low_complexity"><span
+								 title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton &amp; Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)">
+									Low complexity</span><br>
+								<input type="checkbox" class="chk_soft_masking" id="blastx_chk_soft_masking" value="false" name="chk_soft_masking"><span
+								 title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: false)">
+									Mask for lookup table only</span><br>
+							</div>
+						</div>
+						<!-- End BLASTX -->
+						<br/>
+						<input type="hidden" id="low_complexity_hidden" name="low_complexity" value="yes">
+						<input type="hidden" id="soft_masking_hidden" name="soft_masking" value="true">
+
+
+						<div>
+								<input type="reset" value="Reset" class="btn_reset">
+								{% csrf_token %}
+								<input type="submit" value="Blast" class="blast_submit">
+						</div>
+					</div>
+				</div>
+				<!-- <input type="hidden" id="click_submit_hidden" name="click_submit_hidden" value="false"> -->
+				<!-- BLAST options end -->
+
+
+
+
+				<!-- <input type="submit" value="Blast" id="submit" class="btn">&nbsp; <input type="reset" value="Reset" class="btn"> -->
+			</form>
+		</div>
+	</section>
+	<br /><br /><br />
+
+	<!--==============================footer=================================-->
+	<!-- <%@include file="/WEB-INF/views/modules/rna/footer.jsp"%> -->
+</body>
+
+</html>

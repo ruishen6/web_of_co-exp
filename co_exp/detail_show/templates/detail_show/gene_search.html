@@ -24,7 +24,6 @@
 <body>
     <div class="d1">
         <form action="{% url 'detail_show:gene' %}" method="POST">
-            {% csrf_token %}
             <div>
                 <label>Gene ID:</label><br/>
                 <textarea id='gene' rows="10" cols="50" name="gene_ids" required></textarea>  <!-- required 属性规定必需在提交之前填写输入字段。 -->
@@ -34,6 +33,7 @@
                 </span>
             </div>
             <div>
+                {% csrf_token %}
                 <input type="submit" value="search" name='submitBtn' id="sub"/>
             </div>
         </form>

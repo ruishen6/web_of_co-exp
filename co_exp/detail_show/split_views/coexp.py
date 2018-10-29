@@ -49,6 +49,7 @@ def co_expression(request):
         coexpress_genes.append(item.coexpress_gene)
     # judge not found
         gene_accessions.append(item.geneaccession)
+    gene_accessions = list(set(gene_accessions))
     not_found_genes = []
     for item in rep_gene_accessions:
         if item not in gene_accessions:
